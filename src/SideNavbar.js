@@ -1,5 +1,6 @@
 import React from "react";
 import { Menu } from "primereact/menu";
+import { Button } from "primereact/button";
 
 const SideNavbar = () => {
     let items = [
@@ -26,12 +27,20 @@ const SideNavbar = () => {
                 { label: "Add New Customer", icon: "pi pi-fw pi-plus" },
                 { label: "Search Customers", icon: "pi pi-fw pi-search" }
             ]
-        }
+        },
     ];
 
     return (
-        <div style={{ width: "250px", height: "85%", backgroundColor: "#f8f9fa" }}>
-            <Menu model={items} style={{ width: "100%", height: "100%" }} />
+        <div className="flex flex-column justify-between" style={{ width: "250px", height: "100vh", backgroundColor: "#f8f9fa", padding: "1rem" }}>
+            <Menu model={items} style={{ width: "100%" }} />
+
+            {/* My Cart Button */}
+            <Button
+                label="My Cart"
+                icon="pi pi-shopping-cart"
+                className="p-button-outlined p-button-primary w-full mt-3"
+                onClick={() => window.location.href = "/cart"}
+            />
         </div>
     );
 };

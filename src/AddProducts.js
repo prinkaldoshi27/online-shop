@@ -70,10 +70,18 @@ const AddProducts = () => {
 
                                                         {/* Row 2: Inventory Status and Price */}
                             <div className="flex items-center gap-4">
-                                <div className="flex-1 flex flex-col gap-2">
-                                    <label htmlFor="inventoryStatus" className="font-medium" style={labelStyle}>Inventory Status</label>
-                                    <Dropdown id="category" options={stocks} value={product.inventoryStatus} onChange={(e) => handleChange(e, "inventoryStatus")} className="w-full" />
+                                <div className="flex-1 flex flex-col gap-2" style={{ width: "100%" }}>
+                                    <label htmlFor="inventoryStatus" className="font-medium" style={labelStyle}>Status</label>
+                                    <Dropdown
+                                        id="inventoryStatus"
+                                        options={stocks}
+                                        value={product.inventoryStatus}
+                                        onChange={(e) => handleChange(e, "inventoryStatus")}
+                                        className="w-full"
+                                        style={{ minWidth: "250px", width: "100%" }}
+                                    />
                                 </div>
+
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="price" className="font-medium" style={labelStyle}>Price</label>
                                     <InputNumber id="price" value={product.price} onChange={(e) => handleChange(e, "price")} mode="currency" currency="USD" className="w-full" />
