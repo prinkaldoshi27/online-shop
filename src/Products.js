@@ -1,33 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { ProductService } from './service/ProductService';
 import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Dropdown } from 'primereact/dropdown';
-import { classNames } from 'primereact/utils';
 import { InputText } from 'primereact/inputtext';
 import Loader from './Loader';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { productsFetch } from './features/ProductSlice';
 
 export default function Products() {
-    const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState('');
     const [sortOrder, setSortOrder] = useState(0);
-    const [loading, setLoading] = useState(true);
     const [sortField, setSortField] = useState('');
     const [search, setSearch] = useState('');
 
+    const { products, status } = useSelector(state => state.products);
+    const productList = products?.ProductService || [];
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        setTimeout(() => {
-            ProductService.getProducts().then((data) => {
-                setProducts(data.slice(0, 12));
-                setFilteredProducts(data.slice(0, 12));
-            });
-            setLoading(false);
-        }, 2000);
-    }, []);
+        dispatch(productsFetch());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (status === 'loading') {
+            setFilteredProducts([]);
+        } else if (productList.length > 0) {
+            setFilteredProducts(productList);
+        }
+    }, [status, productList]);
 
     const sortOptions = [
         { label: 'Price High to Low', value: '!price' },
@@ -49,7 +55,7 @@ export default function Products() {
     const handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
         setSearch(searchValue);
-        setFilteredProducts(products.filter((product) => product.name.toLowerCase().includes(searchValue)));
+        setFilteredProducts(productList.filter((product) => product.name.toLowerCase().includes(searchValue)));
     };
 
     const getSeverity = (product) => {
@@ -122,7 +128,6 @@ export default function Products() {
 
     const header = () => (
         <div className="flex flex-column sm:flex-row justify-between gap-7 w-full " >
-            {/* Search Bar - Centered & Wider */}
             <div className="flex sm:w-1/2">
                 <InputText
                     style={{ width: "90vh" }}
@@ -132,7 +137,6 @@ export default function Products() {
                 />
             </div>
 
-            {/* Sorting and Layout Options - Aligned to the Right */}
             <div className="flex gap-3 sm:ml-auto">
                 <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} className="w-14rem" />
                 <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
@@ -142,19 +146,20 @@ export default function Products() {
 
 
     return (
-        loading ? <Loader /> :
-        <div style={{
+        status === 'loading' ? <Loader /> :
+            <div style={{
                 marginRight: '1rem',
-        }}>
+            }}>
                 <DataView
                     value={filteredProducts}
                     itemTemplate={(product) => itemTemplate(product, layout)}
                     layout={layout}
                     header={header()}
                     sortField={sortField}
-                sortOrder={sortOrder}
+                    sortOrder={sortOrder}
                 />
             </div>
 
     );
 }
+

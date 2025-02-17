@@ -2,7 +2,7 @@ import Cart from "./Cart";
 import { PrimeReactProvider } from "primereact/api";
 import Navbar from "./Navbar";
 import SideNavbar from "./SideNavbar";
-import Products from "./Products";
+ import Products from "./Products";
 import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "primereact/button";
@@ -60,8 +60,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Products />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/add-products" element={<AddProducts />} />
-              <Route path="/search-products" element={<Products />} />
+              <Route path="/" element={<AddProducts />} />
+              {/* <Route path="/search-products" element={<Products />} /> */}
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </div>

@@ -8,15 +8,26 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import productReducer from './features/ProductSlice';
 
 import './index.css';
-import './flags.css';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+
+const store = configureStore({
+    reducer: {
+        products: productReducer,
+    },
+});
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
+    <Provider store={store}>
     <Router>
         <App />
-    </Router>
+        </Router>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
