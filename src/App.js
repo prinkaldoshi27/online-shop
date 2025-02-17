@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import AddProducts from "./AddProducts";
+import PageNotFound from "./PageNotFound";
 function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
@@ -61,6 +62,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/add-products" element={<AddProducts />} />
               <Route path="/search-products" element={<Products />} />
+              <Route path="*" element={<PageNotFound />} />
             </Routes>
           </div>
 
