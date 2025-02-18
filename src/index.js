@@ -9,7 +9,7 @@ import 'primeflex/primeflex.css';
 import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import productReducer from './features/ProductSlice';
-
+import cartReducer from './features/CartSlice'
 import './index.css';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -17,6 +17,7 @@ import { configureStore } from '@reduxjs/toolkit';
 const store = configureStore({
     reducer: {
         products: productReducer,
+        cart: cartReducer,
     },
 });
 

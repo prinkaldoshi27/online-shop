@@ -5,7 +5,6 @@ const PageNotFound = () => {
     const navigate = useNavigate();
 
     return (
-        // <div className="flex flex-row items-center justify-center h-screen bg-gray-100 text-center">
          <div
             className=' h-screen items-center justify-center'
          >   <h1 className="text-6xl font-bold text-red-500">404</h1>

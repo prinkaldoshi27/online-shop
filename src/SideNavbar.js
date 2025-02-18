@@ -9,7 +9,7 @@ const SideNavbar = () => {
             icon: "pi pi-fw pi-file",
             items: [
                 { label: "Add New Product", icon: "pi pi-fw pi-plus", url: "/add-products" },
-                { label: "Search Products", icon: "pi pi-fw pi-search", url: "/search-products" }
+                { label: "Search Products", icon: "pi pi-fw pi-search", url: "/" }
             ]
         },
         {

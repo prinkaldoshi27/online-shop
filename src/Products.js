@@ -1,16 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
 import Loader from './Loader';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { productsFetch } from './features/ProductSlice';
+import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from './features/CartSlice';
 
 export default function Products() {
+    const toast = useRef(null);
+
+    const showIncrease = () => {
+        toast.current.show({ severity: 'success', summary: 'Product Adding', detail: 'Product Added Successfully', life: 3000 });
+    }
+
+
+    const showDecrease = () => {
+        toast.current.show({ severity: 'info', summary: 'Product Removing', detail: 'Product Removed Successfully', life: 3000 });
+    }
+
+    const showRemove = () => {
+        toast.current.show({ severity: 'error', summary: 'Product Removing', detail: 'Product Removed from the Cart Successfully', life: 3000 });
+    }
+
+
+
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState('');
@@ -22,6 +41,15 @@ export default function Products() {
     const productList = products?.ProductService || [];
 
     const dispatch = useDispatch();
+
+
+    const handleCart = (product) => {
+        dispatch(addToCart(product));
+        showIncrease();
+    }
+
+    const cart = useSelector((state) => state.cart);
+    const cartItems = cart?.cartItems || [];
 
     useEffect(() => {
         dispatch(productsFetch());
@@ -71,6 +99,27 @@ export default function Products() {
         }
     };
 
+
+    const incQuantity = (id, amount) => {
+        dispatch(increaseQuantity(id, amount));
+        showIncrease();
+    }
+
+    const decQuantity = (id, amount) => {
+        {cartItems.map((cart) => 
+        {
+            if(cart.id === id && cart.cartQuantity > 1)
+            {
+                dispatch(decreaseQuantity(id, amount));
+                showDecrease();
+            } else{
+                dispatch(removeFromCart(id, amount));
+                showRemove();
+            }
+        })
+        } 
+    }
+
     const listItem = (product) => (
         <div className="col-12" key={product.id}>
             <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
@@ -90,7 +139,9 @@ export default function Products() {
                     </div>
                     <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
                         <span className="text-2xl font-semibold">${product.price}</span>
-                        <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={product.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button onClick={
+                            () => { incQuantity(product.id, product.price);; }
+                        } icon="pi pi-shopping-cart" className="p-button-rounded" disabled={product.inventoryStatus === 'OUTOFSTOCK'}></Button>
                     </div>
                 </div>
             </div>
@@ -115,7 +166,31 @@ export default function Products() {
                 </div>
                 <div className="flex align-items-center justify-content-between">
                     <span className="text-2xl font-semibold">${product.price}</span>
-                    <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={product.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                    {cartItems.map((cart) =>
+                        cart.id === product.id ? (
+                            <div key={cart.id} className="flex items-center gap-3">
+                                <Button icon="pi pi-minus" onClick={() => {
+                                    decQuantity(product.id, product.price);;
+                                }} className="p-button-rounded p-button-outlined" />
+                                <div className="flex items-center justify-center mt-2">
+                                    <span className="text-xl font-semibold">{cart.cartQuantity}</span>
+                                </div>
+                                <Button icon="pi pi-plus" onClick={() => {
+                                    incQuantity(product.id, product.price);;
+                                }} className="p-button-rounded" />
+                            </div>
+                        ) : null
+                    )}
+
+                    {!cartItems.some(cart => cart.id === product.id) && (
+                        <Button
+                            onClick={() => { handleCart(product);  }}
+                            icon="pi pi-shopping-cart"
+                            className="p-button-rounded"
+                            disabled={product.inventoryStatus === 'OUTOFSTOCK'}
+                        />
+                    )}
+
                 </div>
             </div>
         </div>
@@ -150,6 +225,7 @@ export default function Products() {
             <div style={{
                 marginRight: '1rem',
             }}>
+                <Toast ref={toast} />
                 <DataView
                     value={filteredProducts}
                     itemTemplate={(product) => itemTemplate(product, layout)}
