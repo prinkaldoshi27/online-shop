@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     cartItems: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],

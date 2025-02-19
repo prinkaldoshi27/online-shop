@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { useSelector } from 'react-redux';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Skeleton } from 'primereact/skeleton';
@@ -6,7 +6,6 @@ import { classNames } from 'primereact/utils';
 
 export default function Loader() {
     const [layout, setLayout] = useState('grid');
-    const { status } = useSelector(state => state.products);
 
     const skeletonData = new Array(6).fill({ id: null });
 
