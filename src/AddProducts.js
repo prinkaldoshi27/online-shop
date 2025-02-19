@@ -59,7 +59,7 @@ const AddProducts = () => {
             .unwrap()
             .then(() => {
                 showSuccess();
-                setProduct({  // ✅ Reset form
+                setProduct({  
                     code: "",
                     name: "",
                     description: "",
@@ -70,7 +70,7 @@ const AddProducts = () => {
                     rating: null
                 });
 
-                dispatch(productsFetch()); // ✅ Fetch updated data
+                dispatch(productsFetch()); 
             })
             .catch((error) => {
                 console.error("Submission Error:", error);
