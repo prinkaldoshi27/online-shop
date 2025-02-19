@@ -6,8 +6,13 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import ImageUpload from "./ImageUpload";
 import { useState } from "react";
+import { productsCreate, productsFetch } from "./features/ProductSlice";
+import { useDispatch } from "react-redux";
+import { useRef } from 'react';
+import { Toast } from 'primereact/toast';
 
 const AddProducts = () => {
+    const toast = useRef(null);
     const labelStyle = {
         width: "fit-content",
         display: "flex",
@@ -42,33 +47,62 @@ const AddProducts = () => {
         setProduct({ ...product, [field]: e.value ?? e.target.value });
     };
 
+    const showSuccess = () => {
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Product Added Successfully', life: 3000 });
+    }
+    
+    const dispatch = useDispatch();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        dispatch(productsCreate(product))
+            .unwrap()
+            .then(() => {
+                showSuccess();
+                setProduct({  // ✅ Reset form
+                    code: "",
+                    name: "",
+                    description: "",
+                    price: null,
+                    category: "",
+                    quantity: null,
+                    inventoryStatus: "",
+                    rating: null
+                });
+
+                dispatch(productsFetch()); // ✅ Fetch updated data
+            })
+            .catch((error) => {
+                console.error("Submission Error:", error);
+            });
+    };
+
+
+
+
     return (
+        
+        <form onSubmit={handleSubmit}>
+            <Toast ref={toast} />
         <div className="flex justify-center p-4">
             <Card className="shadow-3 w-full max-w-5xl pl-6">
                 <h2 className="text-2xl font-semibold mb-6">Add Product</h2>
-
-                {/* Main Flex Layout (60-40 Split) */}
                 <div className="flex flex-col lg:flex-row gap-6">
-
-                    {/* Left Section - Form (60%) */}
                     <div className="w-full lg:w-3/5">
                         <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            { /* Row 1: Code and Name */}
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="flex gap-4 items-center">
+                            <div className="flex items-center gap-4">
+                                <div className="flex gap-4 items-center">
                                     <label htmlFor="code" className="font-medium w-32 flex items-center" style={labelStyle} >Code</label>
-                                                                <InputText id="code" value={product.code} onChange={(e) => handleChange(e, "code")} className="flex-1" />
-                                                            </div>
+                                    <InputText id="code" value={product.code} onChange={(e) => handleChange(e, "code")} className="flex-1" />
+                                </div>
 
-                                                            <div className="flex-1 flex flex-col gap-2 justify-center">
-                                                                <label htmlFor="name" className="font-medium"
+                                <div className="flex-1 flex flex-col gap-2 justify-center">
+                                    <label htmlFor="name" className="font-medium"
                                         style={labelStyle}
-                                                                >Name</label>
-                                                                <InputText id="name" value={product.name} onChange={(e) => handleChange(e, "name")} className="w-full" />
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Row 2: Inventory Status and Price */}
+                                    >Name</label>
+                                    <InputText id="name" value={product.name} onChange={(e) => handleChange(e, "name")} className="w-full" />
+                                </div>
+                            </div>
                             <div className="flex items-center gap-4">
                                 <div className="flex-1 flex flex-col gap-2" style={{ width: "100%" }}>
                                     <label htmlFor="inventoryStatus" className="font-medium" style={labelStyle}>Status</label>
@@ -87,8 +121,6 @@ const AddProducts = () => {
                                     <InputNumber id="price" value={product.price} onChange={(e) => handleChange(e, "price")} mode="currency" currency="USD" className="w-full" />
                                 </div>
                             </div>
-
-                            {/* Row 3: Category and Quantity */}
                             <div className="flex items-center gap-4">
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="category" className="font-medium" style={labelStyle}>Category</label>
@@ -96,11 +128,9 @@ const AddProducts = () => {
                                 </div>
                                 <div className="flex-1 flex flex-col gap-2">
                                     <label htmlFor="quantity" className="font-medium" style={labelStyle}>Quantity</label>
-                                    <InputNumber id="quantity"  value={product.quantity} onChange={(e) => handleChange(e, "quantity")} className="w-full" />
+                                    <InputNumber id="quantity" value={product.quantity} onChange={(e) => handleChange(e, "quantity")} className="w-full" />
                                 </div>
                             </div>
-
-                            {/* Row 4: Description (Full Width) */}
                             <div className="col-span-1 md:col-span-2 flex flex-col gap-2 w-full">
                                 <label htmlFor="description" className="font-medium">Description</label>
                                 <InputTextarea id="description" rows={5} value={product.description}
@@ -119,14 +149,13 @@ const AddProducts = () => {
                         <ImageUpload />
                     </div>
 
-                    </div>
-
-                    {/* Button Centered at the Bottom */}
+                </div>
                 <div className="flex justify-center mt-3">
-                    <Button label="Add Product" icon="pi pi-check" className="px-6 py-3" />
+                    <Button  label="Add Product" icon="pi pi-check" className="px-6 py-3" />
                 </div>
             </Card>
         </div>
+        </form>
     );
 };
 

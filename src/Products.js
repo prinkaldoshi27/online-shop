@@ -28,8 +28,6 @@ export default function Products() {
         toast.current.show({ severity: 'error', summary: 'Product Removing', detail: 'Product Removed from the Cart Successfully', life: 3000 });
     }
 
-
-
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState('');
@@ -169,18 +167,26 @@ export default function Products() {
                     {cartItems.map((cart) =>
                         cart.id === product.id ? (
                             <div key={cart.id} className="flex items-center gap-3">
-                                <Button icon="pi pi-minus" onClick={() => {
-                                    decQuantity(product.id, product.price);;
-                                }} className="p-button-rounded p-button-outlined" />
+                                <Button
+                                    icon="pi pi-minus"
+                                    onClick={() => decQuantity(product.id, product.price)}
+                                    className="p-button-rounded p-button-outlined"
+                                />
+
                                 <div className="flex items-center justify-center mt-2">
                                     <span className="text-xl font-semibold">{cart.cartQuantity}</span>
                                 </div>
-                                <Button icon="pi pi-plus" onClick={() => {
-                                    incQuantity(product.id, product.price);;
-                                }} className="p-button-rounded" />
+
+                                <Button
+                                    icon="pi pi-plus"
+                                    onClick={() => incQuantity(product.id, product.price)}
+                                    className="p-button-rounded"
+                                    disabled={cart.cartQuantity >= product.quantity} // Disable if stock is 0
+                                />
                             </div>
                         ) : null
                     )}
+
 
                     {!cartItems.some(cart => cart.id === product.id) && (
                         <Button
