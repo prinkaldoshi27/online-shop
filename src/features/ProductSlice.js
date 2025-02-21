@@ -11,7 +11,7 @@ export const productsFetch = createAsyncThunk(
     'products/productsFetch',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("http://localhost:5000/getItems");
+            const response = await axios.get("https://online-shop-backend-production.up.railway.app/getItems");
             return response.data;
         } catch (err) {
             return rejectWithValue("Error fetching products");
@@ -26,7 +26,7 @@ export const productsCreate = createAsyncThunk(
         try {
             console.log("Sending data:", values); // Debugging line
             const response = await axios.post(
-                "http://localhost:5000/setItems",
+                "https://online-shop-backend-production.up.railway.app/setItems",
                 values,
                 { headers: { "Content-Type": "application/json" } }
             );
