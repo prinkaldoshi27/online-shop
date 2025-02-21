@@ -17,6 +17,7 @@ const Navbar = ({ isSidebarOpen }) => {
         <div className="flex items-center gap-4 h-full">
             <Button icon="pi pi-user" shape="circle" label="Admin" severity="success" text />
             <Button label="Logout" severity="danger" className="flex-shrink-0" />
+          
         </div>
     );
 

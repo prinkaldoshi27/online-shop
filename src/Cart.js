@@ -56,7 +56,7 @@ export default function Cart() {
           cartItems.map((product) => (
             <div key={product.id} className="flex flex-column sm:flex-row align-items-center p-3 mb-3 border-round-lg shadow-sm"
               style={{ border: "1px solid lightgrey", borderRadius: "8px" }}>
-              <img className="w-16 sm:w-12rem shadow-2" src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} />
+              <img className="w-16 sm:w-12rem shadow-2" src={product.image} alt={product.name} />
               <div className="flex flex-column sm:flex-row justify-between align-items-center flex-1 px-4 gap-4 w-full">
                 <div className="flex flex-column gap-2 flex-grow-1">
                   <div className="text-xl font-semibold">{product.name}</div>

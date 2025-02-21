@@ -11,7 +11,7 @@ export const productsFetch = createAsyncThunk(
     'products/productsFetch',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("http://localhost:5000/products");
+            const response = await axios.get("http://localhost:5000/getItems");
             return response.data;
         } catch (err) {
             return rejectWithValue("Error fetching products");
@@ -24,21 +24,21 @@ export const productsCreate = createAsyncThunk(
     "products/productsCreate",
     async (values, { rejectWithValue }) => {
         try {
+            console.log("Sending data:", values); // Debugging line
             const response = await axios.post(
-                "http://localhost:5000/products",
+                "http://localhost:5000/setItems",
                 values,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
+                { headers: { "Content-Type": "application/json" } }
             );
-            return response.data;  
+            console.log("Response received:", response.data); // Debugging line
+            return response.data;
         } catch (error) {
+            console.error("Axios Error:", error.response?.data || error.message);
             return rejectWithValue("Failed to add product");
         }
     }
 );
+
 
 
 const productSlice = createSlice({

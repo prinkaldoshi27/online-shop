@@ -12,7 +12,6 @@ import { useDispatch } from 'react-redux';
 import { productsFetch } from './features/ProductSlice';
 import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from './features/CartSlice';
 
-
 export default function Products() {
     const toast = useRef(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -24,9 +23,6 @@ export default function Products() {
 
     const { products, status } = useSelector(state => state.products);
 
-    useEffect(() => {
-        console.log("Status:", status);
-    })
 
     const cart = useSelector((state) => state.cart);
     const cartItems = cart?.cartItems || [];
@@ -40,7 +36,7 @@ export default function Products() {
     useEffect(() => {
         setTimeout(() => {
             dispatch(productsFetch())
-        },2000)
+        }, 1000)
     }, [dispatch]);
 
     useEffect(() => {
@@ -77,15 +73,16 @@ export default function Products() {
 
     const decQuantity = (id, amount) => {
         {
-            cartItems.map((cart) => {
-                if (cart.id === id && cart.cartQuantity > 1) {
+            const cartItem = cartItems.find((cart) => cart.id === id);
+            if (cartItem) {
+                if (cartItem.cartQuantity > 1) {
                     dispatch(decreaseQuantity(id, amount));
                     showDecrease();
                 } else {
                     dispatch(removeFromCart(id, amount));
                     showRemove();
                 }
-            })
+            }
         }
     }
 
@@ -124,7 +121,7 @@ export default function Products() {
         <div className="col-12" key={product.id}>
             <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
                 style={{ marginTop: '1rem', border: '1px solid lightgrey', borderRadius: '8px' }}>
-                <img className="w-9 sm:w-16rem xl:w-10rem shadow-2" src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} />
+                <img className="w-9 sm:w-16rem xl:w-10rem shadow-2" src={product.image} alt={product.name} />
                 <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                     <div className="flex flex-column align-items-center sm:align-items-start gap-3">
                         <div className="text-2xl font-bold text-900">{product.name}</div>
@@ -139,6 +136,7 @@ export default function Products() {
                     </div>
                     <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
                         <span className="text-2xl font-semibold">${product.price}</span>
+                        {product.id}
                         {cartItems.map((cart) =>
                             cart.id === product.id ? (
                                 <div key={cart.id} className="flex items-center gap-3">
@@ -156,7 +154,7 @@ export default function Products() {
                                         icon="pi pi-plus"
                                         onClick={() => incQuantity(product.id, product.price)}
                                         className="p-button-rounded"
-                                        disabled={cart.cartQuantity >= product.quantity} // Disable if stock is 0
+                                        disabled={cart.cartQuantity >= product.quantity} 
                                     />
                                 </div>
                             ) : null
@@ -187,7 +185,12 @@ export default function Products() {
                     <Tag value={product.inventoryStatus} severity={getSeverity(product)}></Tag>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} />
+                    <img className="w-9 shadow-2 border-round" src={product.image} alt={product.name} 
+                    style={{
+                        height: '150px',
+                        width: '200px'
+                    }}
+                    />
                     <div className="text-2xl font-bold">{product.name}</div>
                     <Rating value={product.rating} readOnly cancel={false} />
                 </div>
@@ -211,7 +214,7 @@ export default function Products() {
                                     icon="pi pi-plus"
                                     onClick={() => incQuantity(product.id, product.price)}
                                     className="p-button-rounded"
-                                    disabled={cart.cartQuantity >= product.quantity} // Disable if stock is 0
+                                    disabled={cart.cartQuantity >= product.quantity} 
                                 />
                             </div>
                         ) : null
@@ -283,3 +286,28 @@ export default function Products() {
 
 
 }
+
+
+// import axios from 'axios';
+// import {useEffect, useState} from 'react';
+// const Products = () => {
+//     const [items, setItems] = useState([]);
+//     useEffect(() => {   
+//       axios.get('http://localhost:5000/getItems')
+//       .then(items => setItems(items.data))
+//       .catch(err => console.log(err))
+//     }, []);
+//   return (
+//     <>
+//     {items.map(item => (
+//         <div key={item._id}>
+//             <h1>{item.name}</h1>
+//         <p>{item.description}</p>
+//             <p>{item.price}</p>
+//         </div>
+//     ))
+//     }
+//     </>
+//   )
+// }
+// export default Products;

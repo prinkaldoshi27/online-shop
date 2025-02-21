@@ -1,8 +1,12 @@
 import React from "react";
 import { Menu } from "primereact/menu";
+import { Badge } from "primereact/badge";
 import { Button } from "primereact/button";
+import { useSelector } from "react-redux";
 
 const SideNavbar = () => {
+    const cart = useSelector((state) => state.cart);
+    const cartItems = cart?.cartItems || [];
     let items = [
         {
             label: "Products",
@@ -34,13 +38,14 @@ const SideNavbar = () => {
         <div className="flex flex-column justify-between" style={{ width: "250px", height: "100vh", backgroundColor: "#f8f9fa", padding: "1rem" }}>
             <Menu model={items} style={{ width: "100%" }} />
 
-            {/* My Cart Button */}
             <Button
                 label="My Cart"
                 icon="pi pi-shopping-cart"
                 className="p-button-outlined p-button-primary w-full mt-3"
                 onClick={() => window.location.href = "/cart"}
-            />
+            >
+                <Badge value={cartItems.length} severity="warning" />
+            </Button>
         </div>
     );
 };
