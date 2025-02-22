@@ -3,7 +3,7 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import { Button } from 'primereact/button';
 
-const Navbar = ({ isSidebarOpen }) => {
+const Navbar = ({ isSidebarOpen, userName,  }) => {
     const start = (
         <div className="flex items-center gap-4" style={{
             marginLeft: !isSidebarOpen ? "50px" : "0",
@@ -15,9 +15,7 @@ const Navbar = ({ isSidebarOpen }) => {
     );
     const end = (
         <div className="flex items-center gap-4 h-full">
-            <Button icon="pi pi-user" shape="circle" label="Admin" severity="success" text />
-            <Button label="Logout" severity="danger" className="flex-shrink-0" />
-          
+            <Button icon="pi pi-user" shape="circle" label={userName}severity="success" text />
         </div>
     );
 

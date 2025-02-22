@@ -13,11 +13,13 @@ import cartReducer from './features/CartSlice'
 import './index.css';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './features/UserSlice';
 
 const store = configureStore({
     reducer: {
         products: productReducer,
         cart: cartReducer,
+        users: userReducer
     },
 });
 

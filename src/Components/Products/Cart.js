@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Button } from "primereact/button";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, increaseQuantity, decreaseQuantity, clearCart } from './features/CartSlice';
+import { removeFromCart, increaseQuantity, decreaseQuantity, clearCart } from '../../features/CartSlice';
 import { Toast } from 'primereact/toast';
 
 export default function Cart() {

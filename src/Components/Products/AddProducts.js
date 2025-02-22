@@ -6,7 +6,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import ImageUpload from "./ImageUpload";
 import { useState, useEffect, useRef } from "react";
-import { productsCreate, productsFetch } from "./features/ProductSlice";
+import { productsCreate, productsFetch } from "../../features/ProductSlice";
 import { useDispatch } from "react-redux";
 import { Toast } from "primereact/toast";
 import { useSelector } from "react-redux";

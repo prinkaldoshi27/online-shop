@@ -29,7 +29,7 @@ const SideNavbar = () => {
             icon: "pi pi-fw pi-user",
             items: [
                 { label: "Add New Customer", icon: "pi pi-fw pi-plus" },
-                { label: "Search Customers", icon: "pi pi-fw pi-search" }
+                { label: "Search Customers", icon: "pi pi-fw pi-search", url: "/users" }
             ]
         },
     ];

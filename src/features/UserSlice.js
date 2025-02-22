@@ -2,30 +2,30 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    products: [],
+    users: [],
     status: null,
     error: null,
 };
 
-export const productsFetch = createAsyncThunk(
-    'products/productsFetch',
+export const usersFetch = createAsyncThunk(
+    'users/usersFetch',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("https://online-shop-backend-production.up.railway.app/getItems");
+            const response = await axios.get("https://online-shop-backend-production.up.railway.app/getUsers");
             return response.data;
         } catch (err) {
-            return rejectWithValue("Error fetching products");
+            return rejectWithValue("Error fetching users");
         }
     }
 );
 
 
-export const productsCreate = createAsyncThunk(
-    "products/productsCreate",
+export const usersCreate = createAsyncThunk(
+    "users/usersCreate",
     async (values, { rejectWithValue }) => {
         try {
             const response = await axios.post(
-                "https://online-shop-backend-production.up.railway.app/setItems",
+                "https://online-shop-backend-production.up.railway.app/setUsers",
                 values,
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -38,35 +38,35 @@ export const productsCreate = createAsyncThunk(
 
 
 
-const productSlice = createSlice({
-    name: "products",
+const userSlice = createSlice({
+    name: "users",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(productsFetch.pending, (state) => {
+            .addCase(usersFetch.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(productsFetch.fulfilled, (state, action) => {
+            .addCase(usersFetch.fulfilled, (state, action) => {
                 state.status = "success";
-                state.products = action.payload;
+                state.users = action.payload;
             })
-            .addCase(productsFetch.rejected, (state, action) => {
+            .addCase(usersFetch.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
             })
-            .addCase(productsCreate.pending, (state) => {
+            .addCase(usersCreate.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(productsCreate.fulfilled, (state, action) => {
-                state.products.push(action.payload); 
+            .addCase(usersCreate.fulfilled, (state, action) => {
+                state.users.push(action.payload);
                 state.status = "success";
             })
-            .addCase(productsCreate.rejected, (state, action) => {
+            .addCase(usersCreate.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
             });
     },
 });
 
-export default productSlice.reducer;
+export default userSlice.reducer;

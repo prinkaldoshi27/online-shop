@@ -9,8 +9,8 @@ import Loader from './Loader';
 import { Toast } from 'primereact/toast';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { productsFetch } from './features/ProductSlice';
-import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from './features/CartSlice';
+import { productsFetch } from '../../features/ProductSlice';
+import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../../features/CartSlice';
 
 export default function Products() {
     const toast = useRef(null);
@@ -154,7 +154,7 @@ export default function Products() {
                                         icon="pi pi-plus"
                                         onClick={() => incQuantity(product.id, product.price)}
                                         className="p-button-rounded"
-                                        disabled={cart.cartQuantity >= product.quantity} 
+                                        disabled={cart.cartQuantity >= product.quantity}
                                     />
                                 </div>
                             ) : null
@@ -185,18 +185,18 @@ export default function Products() {
                     <Tag value={product.inventoryStatus} severity={getSeverity(product)}></Tag>
                 </div>
                 <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img className="w-9 shadow-2 border-round" src={product.image} alt={product.name} 
-                    style={{
-                        height: '150px',
-                        width: '200px'
-                    }}
+                    <img className="w-9 shadow-2 border-round" src={product.image} alt={product.name}
+                        style={{
+                            height: '150px',
+                            width: '200px'
+                        }}
                     />
                     <div className="text-2xl font-bold">{product.name}</div>
                     <Rating value={product.rating} readOnly cancel={false} />
                 </div>
                 <div className="flex align-items-center justify-content-between">
                     <span className="text-2xl font-semibold">${product.price}</span>
-                    
+
                     {cartItems.map((cart) =>
                         cart.id === product.id ? (
                             <div key={cart.id} className="flex items-center gap-3">
@@ -214,7 +214,7 @@ export default function Products() {
                                     icon="pi pi-plus"
                                     onClick={() => incQuantity(product.id, product.price)}
                                     className="p-button-rounded"
-                                    disabled={cart.cartQuantity >= product.quantity} 
+                                    disabled={cart.cartQuantity >= product.quantity}
                                 />
                             </div>
                         ) : null
@@ -279,35 +279,8 @@ export default function Products() {
                     />
                 </div>
             ) : (
-                    status !== 'loading' && <Loader /> 
+                status !== 'loading' && <Loader />
             )}
         </>
     );
-
-
 }
-
-
-// import axios from 'axios';
-// import {useEffect, useState} from 'react';
-// const Products = () => {
-//     const [items, setItems] = useState([]);
-//     useEffect(() => {   
-//       axios.get('http://localhost:5000/getItems')
-//       .then(items => setItems(items.data))
-//       .catch(err => console.log(err))
-//     }, []);
-//   return (
-//     <>
-//     {items.map(item => (
-//         <div key={item._id}>
-//             <h1>{item.name}</h1>
-//         <p>{item.description}</p>
-//             <p>{item.price}</p>
-//         </div>
-//     ))
-//     }
-//     </>
-//   )
-// }
-// export default Products;
