@@ -96,11 +96,11 @@ const userSlice = createSlice({
             })
             .addCase(userUpdate.fulfilled, (state, action) => {
                 state.status = "success";
-                const { id, updatedData } = action.payload;
-                const userIndex = state.users.findIndex(user => user.id === id);
-                if (userIndex !== -1) {
-                    state.users[userIndex] = { ...state.users[userIndex], ...updatedData }; 
-                }
+                const updatedUser = action.payload;
+
+                state.users = state.users.map(user =>
+                    user.id === updatedUser.id ? updatedUser : user
+                );
             })
             .addCase(userDelete.fulfilled, (state, action) => {
                 state.status = "success";

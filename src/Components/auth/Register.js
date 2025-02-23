@@ -43,9 +43,8 @@ const Register = () => {
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
-                navigate("/");
+                navigate("/products");
                 dispatch(usersFetch());
-                console.log("HOGYA GURU")
             })
             .catch((error) => {
                 console.error("Submission Error:", error);

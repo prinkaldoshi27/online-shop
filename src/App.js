@@ -1,78 +1,51 @@
-import Cart from "./Components/Products/Cart";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { PrimeReactProvider } from "primereact/api";
-import Navbar from "./Components/navbars/Navbar";
-import SideNavbar from "./Components/navbars/SideNavbar";
-import Products from "./Components/Products/Products";
-import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Button } from "primereact/button";
+import Layout from "./Components/Layout";
+import Products from "./Components/Products/Products";
+import Cart from "./Components/Products/Cart";
 import AddProducts from "./Components/Products/AddProducts";
+import Users from "./Components/Users/Users";
 import PageNotFound from "./Components/PageNotFound";
 import Signin from "./Components/auth/Signin";
 import Register from "./Components/auth/Register";
-import Users from "./Components/Users/Users";
+
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   useEffect(() => {
-    const handleResize = () => {
-      setIsSidebarOpen(window.innerWidth >= 1024);
-      setIsMobile(window.innerWidth < 1024);
-    };
+    setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
+  }, [location]);
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const handleLoginSuccess = () => {
+    localStorage.setItem("isAuthenticated", "true");
+    setIsAuthenticated(true);
+    navigate("/products");
+  };
 
   return (
     <PrimeReactProvider>
-      <div style={{ display: "flex", flexDirection: "column", height: "98vh", overflow: "hidden", width: "100" }}>
-        <div style={{ position: "sticky", top: 0, zIndex: 1000 }}>
-          <Navbar />
-        </div>
-        <div style={{ display: "flex", flex: 1, overflow: "hidden", width: "100%" }}>
-          {isMobile && (
-            <div className="flex items-center" style={{ position: "absolute", top: "1.5rem", left: "1rem", zIndex: 1100, display: "flex", justifyContent: "center" }}>
-              <Button
-                severity="secondary"
-                icon={isSidebarOpen ? "pi pi-times" : "pi pi-align-left"}
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-button-text p-button-rounded flex items-center h-16 w-16"
-              />
-            </div>
-          )}
-          {(isSidebarOpen || !isMobile) && (
-            <div
-              style={{
-                position: "sticky",
-                left: 0,
-                top: 0,
-                height: "100vh",
-                marginTop: "1rem",
-                zIndex: 900,
-                transition: "all 0.3s ease-in-out",
-              }}
-            >
-              <SideNavbar />
-            </div>
-          )}
+      <Routes>
+        {/* Public Routes (No Navbar) */}
+        <Route path="/" element={<Signin onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/signin" element={<Signin onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/register" element={<Register />} />
 
-          <div style={{ flex: 1, overflowY: "auto", paddingLeft: isSidebarOpen ? "1rem" : "0", paddingTop: "1rem", paddingBottom: "1rem", width: "100%" }}>
-            <Routes>
-             <Route path="/" element={<Signin/>} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/register" element={<Register/>}/>
-              <Route path="/signin" element={<Signin/>}/>
-              <Route path="/users" element={<Users />} />
-              <Route path="/add-products" element={<AddProducts />} />
-              <Route path="*" element={<PageNotFound />} />
-            </Routes>
-          </div>
-
-        </div>
-      </div>
+        {/* Protected Routes (With Navbar & Sidebar) */}
+        {isAuthenticated ? (
+          <Route path="/" element={<Layout />}>
+            <Route path="/products" element={<Products />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/add-products" element={<AddProducts />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        ) : (
+          <Route path="*" element={<Signin onLoginSuccess={handleLoginSuccess} />} />
+        )}
+      </Routes>
     </PrimeReactProvider>
   );
 }

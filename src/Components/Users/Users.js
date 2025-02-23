@@ -10,7 +10,6 @@ import { InputText } from 'primereact/inputtext';
 export default function Users() {
     const { users, status } = useSelector(state => state.users);
 
-    console.log(users)
 
     const dispatch = useDispatch();
 
@@ -29,9 +28,10 @@ export default function Users() {
     };
 
 
-    const handleUpdateUser = () => {
+    const handleUpdateUser = async () => {
         if (editUser) {
-            dispatch(userUpdate({ id: editUser._id, updatedData: editUser }));
+            await dispatch(userUpdate({ id: editUser.id, updatedData: editUser }));
+            await dispatch(usersFetch()); 
             setEditUser(null);
         }
     };
@@ -39,6 +39,7 @@ export default function Users() {
     const handleDeleteUser = () => {
         if (deleteUser) {
             dispatch(userDelete(deleteUser._id));
+            dispatch(usersFetch());
             setDeleteUser(null);
         }
     };
