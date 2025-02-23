@@ -23,10 +23,6 @@ const AddProducts = () => {
     }, [dispatch]);
       const { products, status } = useSelector(state => state.products);
      const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-    
-     {
-        console.log(newId)
-     }
     const toast = useRef(null);
     const labelStyle = {
         width: "fit-content",

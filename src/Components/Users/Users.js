@@ -3,7 +3,7 @@ import { DataView } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { usersFetch } from '../../features/UserSlice';
-
+import { Button } from 'primereact/button';
 
 export default function Users() {
     const { users, status } = useSelector(state => state.users);
@@ -20,21 +20,30 @@ export default function Users() {
 
     const itemTemplate = (user, index) => {
         return (
+            <div style={{
+                backgroundColor: "#f8f9fa",
+            }}>
+            <div className="flex flex-column justify-between">
             <div className="col-12" key={user.id}>
-                <div className={classNames('flex flex-column xl:flex-row xl:align-users-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
-                    {/* <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={`https://primefaces.org/cdn/primereact/images/user/${user.image}`} alt={user.name} /> */}
+                <div className={classNames('flex flex-column xl:flex-col xl:align-users-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
                     <div className="flex flex-column sm:flex-row justify-content-between align-users-center xl:align-users-start flex-1 gap-4">
                         <div className="flex flex-column align-users-center sm:align-users-start gap-3">
                             <div className="text-2xl font-bold text-900">{user.name}</div>
                             <div className="flex align-users-center gap-3">
                                 <span className="flex align-users-center gap-2">
-                                    <i className="pi pi-tag"></i>
+                                            <i className="pi pi-envelope"></i>
                                     <span className="font-semibold">{user.email}</span>
                                 </span>
                             </div>
                         </div>
+                                <div className="flex flex-row align-items-center gap-2 ml-auto">
+                                    <Button label="Edit" className=" p-button-success" />
+                                    <Button label='Delete' className=" p-button-danger" />
+                                </div>
                     </div>
                 </div>
+            </div>
+            </div>
             </div>
         );
     };
@@ -46,12 +55,19 @@ export default function Users() {
             return itemTemplate(user, index);
         });
 
-        return <div className="grid grid-nogutter">{list}</div>;
+        return <div className="list " style={{
+            minHeight: "73vh", backgroundColor: "#f8f9fa",
+        }}>{list}</div>;
     };
 
     return (
-        <div className="card">
-            <DataView value={users} listTemplate={listTemplate} paginator rows={5} />
+        <>
+            {status === 'loading' ? <p>Loading </p> :        
+                   <div className="card" >
+                    <DataView value={[...users].reverse()} listTemplate={listTemplate} paginator rows={5} />
         </div>
-    )
+        
+            }
+        </>
+    );
 }

@@ -31,10 +31,11 @@ export const usersCreate = createAsyncThunk(
             );
             return response.data;
         } catch (error) {
-            return rejectWithValue("Failed to add product");
+            return rejectWithValue("Failed to add User");
         }
     }
 );
+
 
 
 
