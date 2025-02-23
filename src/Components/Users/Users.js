@@ -31,15 +31,17 @@ export default function Users() {
 
     const handleUpdateUser = () => {
         if (editUser) {
-            dispatch(userUpdate({ id: editUser.id, updatedData: { name: editUser.name } }));
-            setEditUser(null); // Close the modal
+            dispatch(userUpdate({ id: editUser.id, updatedData: editUser }));
+            console.log("new name: ", editUser.name);
+            console.log("New Object: ", editUser);
+            setEditUser(null); 
         }
     };
 
     const handleDeleteUser = () => {
         if (deleteUser) {
             dispatch(userDelete(deleteUser.id));
-            setDeleteUser(null); // Close the modal
+            setDeleteUser(null); 
         }
     };
     const itemTemplate = (user, index) => {

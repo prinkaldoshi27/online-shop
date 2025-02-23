@@ -7,7 +7,6 @@ const initialState = {
     error: null,
 };
 
-// Fetch users
 export const usersFetch = createAsyncThunk(
     "users/usersFetch",
     async (_, { rejectWithValue }) => {
@@ -36,30 +35,37 @@ export const usersCreate = createAsyncThunk(
         }
     }
 );
-
 export const userUpdate = createAsyncThunk(
     "users/userUpdate",
     async ({ id, updatedData }, { rejectWithValue }) => {
         try {
+            console.log("Updating user with ID:", id); // Debugging
+            console.log("Updated Data:", updatedData); // Debugging
+
             const response = await axios.put(
                 `https://online-shop-backend-production.up.railway.app/updateUser/${id}`,
                 updatedData,
                 { headers: { "Content-Type": "application/json" } }
             );
+
+            console.log("Update Response:", response.data); // Debugging
+
+            // Return the updated user data along with the ID
             return { id, updatedData: response.data };
-            console.log("Update Response:", response.data);
         } catch (error) {
+            console.error("Update Error:", error); // Debugging
             return rejectWithValue("Failed to update User");
         }
     }
 );
+
 export const userDelete = createAsyncThunk(
     "users/userDelete",
     async (id, { rejectWithValue }) => {
+        console.log("Delete Response:", id);
         try {
             await axios.delete(`https://online-shop-backend-production.up.railway.app/deleteUser/${id}`);
             return id;
-            console.log("Delete Response:", id);
         } catch (error) {
             return rejectWithValue("Failed to delete User");
         }
