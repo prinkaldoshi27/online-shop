@@ -3,3 +3,14 @@
     display: none !important;
   }
 }
+
+@media (max-width: 1024px) {
+  .hamburger-menu {
+    display: flex !important;
+  }
+}
+
+.p-button-text {
+  display: flex !important;
+  /* Ensures it never gets hidden */
+}

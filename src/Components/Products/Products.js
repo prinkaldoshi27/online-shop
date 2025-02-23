@@ -238,19 +238,32 @@ export default function Products() {
     };
 
     const header = () => (
-        <div className="flex flex-column sm:flex-row justify-between gap-7 w-full " >
-            <div className="flex sm:w-1/2">
+        <div className="flex flex-column sm:flex-row justify-content-between align-items-center gap-3 w-full">
+            {/* Search Input */}
+            <div className="flex w-full sm:w-6 md:w-4 lg:w-3">
                 <InputText
-                    style={{ width: "90vh" }}
                     value={search}
                     onChange={handleSearch}
                     placeholder="Search products..."
+                    className="w-full"
                 />
             </div>
 
-            <div className="flex gap-3 sm:ml-auto">
-                <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} className="w-14rem" />
-                <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
+            {/* Dropdown and Layout Options */}
+            <div className="flex flex-column sm:flex-row gap-3 w-full sm:w-auto">
+                <Dropdown
+                    options={sortOptions}
+                    value={sortKey}
+                    optionLabel="label"
+                    placeholder="Sort By Price"
+                    onChange={onSortChange}
+                    className="w-full sm:w-14rem"
+                />
+                <DataViewLayoutOptions
+                    layout={layout}
+                    onChange={(e) => setLayout(e.value)}
+                    className="w-full sm:w-auto"
+                />
             </div>
         </div>
     );
