@@ -30,19 +30,24 @@ export default function Users() {
 
     const handleUpdateUser = async () => {
         if (editUser) {
-            await dispatch(userUpdate({ id: editUser.id, updatedData: editUser }));
-            await dispatch(usersFetch()); 
-            setEditUser(null);
+            try {
+                await dispatch(userUpdate({ id: editUser._id, updatedData: editUser })); 
+                setEditUser(null);
+                dispatch(usersFetch());
+            } catch (error) {
+                console.error("Error updating user:", error);
+            }
         }
     };
 
-    const handleDeleteUser = () => {
+    const handleDeleteUser = async () => {
         if (deleteUser) {
-            dispatch(userDelete(deleteUser._id));
-            dispatch(usersFetch());
+            await dispatch(userDelete(deleteUser._id));
             setDeleteUser(null);
+            dispatch(usersFetch());
         }
     };
+
 
     const itemTemplate = (user, index) => {
         return (

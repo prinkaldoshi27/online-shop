@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { usersFetch } from '../../features/UserSlice';
 import { useDispatch } from 'react-redux';
 
-const Signin = () => {
+const Signin = ({ onLoginSuccess }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [checked1, setChecked1] = useState(false);
@@ -23,12 +23,9 @@ const Signin = () => {
 
     const handleSignIn = () => {
         const matchedUser = users.find(user => user.email === email && user.password === password);
-        console.log("Username : ", email)
-        console.log("Password : ", password)
-        console.log(users)
         if (matchedUser) {
             navigate("/products");
-            console.log("HURRAY");
+            onLoginSuccess(matchedUser);
         } else {
             alert("Invalid credentials! Try again.");
         }

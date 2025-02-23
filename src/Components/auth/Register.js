@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -10,23 +10,43 @@ import { useSelector, useDispatch } from 'react-redux';
 const Register = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const toast = useRef(null);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [errors, setErrors] = useState({});
     const { users } = useSelector(state => state.users);
+    
+    
+        useEffect(() => {
+                dispatch(usersFetch())
+        }, [dispatch]);
+    
     const newId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
 
-    const toast = useRef(null);
+    const showSuccess = () => {
+        toast.current.show({ severity: "success", summary: "Success", detail: "Successfully Registered!", life: 3000 });
+    };
 
-     const showSuccess = () => {
-         toast.current.show({ severity: "success", summary: "Success", detail: "Registration Successful", life: 3000 });
-     };
+    const validateForm = () => {
+        let tempErrors = {};
+        if (!name.trim()) tempErrors.name = "Name is required";
+        if (!email.trim()) tempErrors.email = "Email is required";
+        else if (users.some(user => user.email === email)) tempErrors.email = "Email is already registered";
+        if (!password.trim()) tempErrors.password = "Password is required";
+        if (!confirmPassword.trim()) tempErrors.confirmPassword = "Confirm Password is required";
+        else if (password !== confirmPassword) tempErrors.confirmPassword = "Passwords do not match";
+
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
 
         const newUser = {
             id: newId,
@@ -38,30 +58,18 @@ const Register = () => {
         dispatch(usersCreate(newUser))
             .unwrap()
             .then(() => {
-                 showSuccess();
+                showSuccess();
                 setName('');
                 setEmail('');
                 setPassword('');
                 setConfirmPassword('');
-                navigate("/products");
+                setErrors({});
                 dispatch(usersFetch());
+                navigate("/products");
             })
             .catch((error) => {
                 console.error("Submission Error:", error);
             });
-    };
-
-    const handleRegister = (event) => {
-        event.preventDefault();
-        if (!name || !email || !password || !confirmPassword) {
-            alert("Please fill in all fields!");
-            return;
-        }
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
-        handleSubmit(event);
     };
 
     return (
@@ -79,24 +87,28 @@ const Register = () => {
                     </div>
                     <div>
                         <label htmlFor="name" className="block text-900 font-medium mb-2">Full Name</label>
-                        <InputText id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" className="w-full mb-3" />
+                        <InputText id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" className="w-full mb-1" />
+                        {errors.name && <small className="p-error">{errors.name}</small>}
 
-                        <label htmlFor="email" className="block text-900 font-medium mb-2">Email</label>
-                        <InputText id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" className="w-full mb-3" />
+                        <label htmlFor="email" className="block text-900 font-medium mt-3 mb-2">Email</label>
+                        <InputText id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email address" className="w-full mb-1" />
+                        {errors.email && <small className="p-error">{errors.email}</small>}
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 mt-3">
                             <div className="flex-1">
                                 <label htmlFor="password" className="block text-900 font-medium mb-2">Password</label>
                                 <Password id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full" toggleMask />
+                                {errors.password && <small className="p-error">{errors.password}</small>}
                             </div>
 
                             <div className="flex-1">
                                 <label htmlFor="confirmPassword" className="block text-900 font-medium mb-2">Confirm Password</label>
                                 <Password id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" className="w-full" toggleMask feedback={false} />
+                                {errors.confirmPassword && <small className="p-error">{errors.confirmPassword}</small>}
                             </div>
                         </div>
 
-                        <Button label="Register" icon="pi pi-user-plus" className="w-full mt-4" onClick={handleRegister} />
+                        <Button type="submit" label="Register" icon="pi pi-user-plus" className="w-full mt-4" />
                     </div>
                 </div>
             </div>

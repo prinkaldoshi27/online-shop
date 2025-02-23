@@ -136,7 +136,6 @@ export default function Products() {
                     </div>
                     <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
                         <span className="text-2xl font-semibold">${product.price}</span>
-                        {product.id}
                         {cartItems.map((cart) =>
                             cart.id === product.id ? (
                                 <div key={cart.id} className="flex items-center gap-3">
@@ -270,7 +269,7 @@ export default function Products() {
             {status !== 'loading' && filteredProducts.length > 0 ? (
                 <div style={{ marginRight: '1rem' }}>
                     <DataView
-                        value={filteredProducts}
+                        value={[...filteredProducts].reverse()}
                         itemTemplate={(product) => itemTemplate(product, layout)}
                         layout={layout}
                         header={header()}
