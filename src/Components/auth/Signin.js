@@ -3,29 +3,52 @@ import { InputText } from 'primereact/inputtext';
 import { Checkbox } from 'primereact/checkbox';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { usersFetch } from '../../features/UserSlice';
-import { useDispatch } from 'react-redux';
 
 const Signin = ({ onLoginSuccess }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const [checked1, setChecked1] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
-    const { users, status } = useSelector(state => state.users);
-        useEffect(() => {
-            setTimeout(() => {
-                dispatch(usersFetch())
-            }, 1000)
-        }, [dispatch]);
+
+    const { users } = useSelector(state => state.users);
+
+    // Load stored credentials from localStorage when the component mounts
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("rememberedEmail");
+        const savedPassword = localStorage.getItem("rememberedPassword");
+        const rememberMeStatus = localStorage.getItem("rememberMe") === "true";
+
+        if (rememberMeStatus && savedEmail && savedPassword) {
+            setEmail(savedEmail);
+            setPassword(savedPassword);
+            setChecked1(true);
+        }
+
+        dispatch(usersFetch());
+    }, [dispatch]);
 
     const handleSignIn = () => {
         const matchedUser = users.find(user => user.email === email && user.password === password);
+
         if (matchedUser) {
-            navigate("/products");
+            // If "Remember Me" is checked, store credentials
+            if (checked1) {
+                localStorage.setItem("rememberedEmail", email);
+                localStorage.setItem("rememberedPassword", password);
+                localStorage.setItem("rememberMe", "true");
+            } else {
+                // If "Remember Me" is unchecked, clear saved credentials
+                localStorage.removeItem("rememberedEmail");
+                localStorage.removeItem("rememberedPassword");
+                localStorage.removeItem("rememberMe");
+            }
+
             onLoginSuccess(matchedUser);
+            navigate("/products");
         } else {
             alert("Invalid credentials! Try again.");
         }
@@ -38,7 +61,6 @@ const Signin = ({ onLoginSuccess }) => {
                     <img src="https://res.cloudinary.com/dha1tbwhv/image/upload/v1740219946/tag-icon_u4f6id.png" alt="hyper" height={50} className="mb-3" />
                     <div className="text-900 text-3xl font-medium mb-3">Welcome Back</div>
                     <span className="text-600 font-medium line-height-3">Don't have an account?</span>
-
                     <a className="font-medium underline ml-2 text-blue-500 cursor-pointer" onClick={() => navigate('/register')}>Create today!</a>
                 </div>
 
