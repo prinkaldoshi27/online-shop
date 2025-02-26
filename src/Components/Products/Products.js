@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
+import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import Loader from './Loader';
@@ -13,6 +14,8 @@ import { productsFetch } from '../../features/ProductSlice';
 import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../../features/CartSlice';
 
 export default function Products() {
+    const navigate = useNavigate();
+
     const toast = useRef(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [layout, setLayout] = useState('grid');
@@ -118,7 +121,7 @@ export default function Products() {
     };
 
     const listItem = (product) => (
-        <div className="col-12" key={product.id}>
+        <div className="col-12" key={product.id} onClick={() => navigate('/product-info', { state: { product } })} style={{ cursor: 'pointer' }}>
             <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
                 style={{ marginTop: '1rem', border: '1px solid lightgrey', borderRadius: '8px' }}>
                 <img className="w-9 sm:w-16rem xl:w-10rem shadow-2" src={product.image} alt={product.name} />
@@ -173,7 +176,7 @@ export default function Products() {
     );
 
     const gridItem = (product) => (
-        <div className="col-12 sm:col-6 lg:col-4 p-2" key={product.id} style={{ minWidth: "250px" }}>
+        <div className="col-12 sm:col-6 lg:col-4 p-2" key={product.id} onClick={() => navigate('/product-info', { state: { product } })} style={{ cursor: 'pointer' }}>
             <div className="p-4 surface-card"
                 style={{ marginTop: '1rem', border: '1px solid lightgrey', borderRadius: '8px' }}>
                 <div className="flex flex-wrap align-items-center justify-content-between gap-2">

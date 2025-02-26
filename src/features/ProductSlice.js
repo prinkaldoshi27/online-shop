@@ -36,6 +36,24 @@ export const productsCreate = createAsyncThunk(
     }
 );
 
+export const itemUpdate = createAsyncThunk(
+    "items/itemUpdate",
+    async ({ id, updatedData }, { rejectWithValue }) => {
+        try {
+            const response = await axios.put(
+                `https://online-shop-backend-production.up.railway.app/updateitem/${id}`,
+                updatedData,
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            return { id, updatedData: response.data };
+        } catch (error) {
+            return rejectWithValue("Failed to update item");
+        }
+    }
+);
+
+
 
 
 const productSlice = createSlice({
@@ -47,10 +65,14 @@ const productSlice = createSlice({
             .addCase(productsFetch.pending, (state) => {
                 state.status = "loading";
             })
+            // .addCase(productsFetch.fulfilled, (state, action) => {
+            //     state.status = "success";
+            //     state.products = action.payload;
+            // })
             .addCase(productsFetch.fulfilled, (state, action) => {
-                state.status = "success";
-                state.products = action.payload;
-            })
+            state.status = "success";
+            state.products = action.payload.length ? action.payload : [];
+        })
             .addCase(productsFetch.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload;
