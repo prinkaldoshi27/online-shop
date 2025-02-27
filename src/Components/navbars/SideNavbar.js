@@ -20,7 +20,7 @@ const SideNavbar = () => {
             label: "Orders",
             icon: "pi pi-fw pi-shopping-cart",
             items: [
-                { label: "View Orders", icon: "pi pi-fw pi-cog" },
+                { label: "View Orders", icon: "pi pi-fw pi-cog", url: "/dashboard" },
                 { label: "Search Orders", icon: "pi pi-fw pi-search" }
             ]
         },
@@ -28,7 +28,7 @@ const SideNavbar = () => {
             label: "Customers",
             icon: "pi pi-fw pi-user",
             items: [
-                { label: "Add New Customer", icon: "pi pi-fw pi-plus" },
+                { label: "Add New Customer", icon: "pi pi-fw pi-plus" , url: "/register"},
                 { label: "Search Customers", icon: "pi pi-fw pi-search", url: "/users" }
             ]
         },

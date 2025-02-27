@@ -15,14 +15,14 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen, userName  }) => {
     const start = (
         <div className="flex items-center gap-4">
             <Button icon="pi pi-bars" className="p-button-text"
-                onClick={() => setIsSidebarOpen(prev => !prev)} />  {/* ✅ This now works! */}
+                onClick={() => setIsSidebarOpen(prev => !prev)} />  
             <h2 className="text-lg md:text-2xl">TAG ECOMMERCE</h2>
         </div>
     );
 
     const end = (
         <div className="flex items-center gap-4 h-full">
-            <Button icon="pi pi-user" shape="circle" label={userName}severity="success" text onClick={() => navigate("/profile")}/>
+            <Button icon="pi pi-user" shape="circle" label={userName} severity="success" text onClick={() => navigate("/dashboard")} />
             <Button label="Logout" onClick={handleLogout} className="p-button-danger" />
         </div>
     );

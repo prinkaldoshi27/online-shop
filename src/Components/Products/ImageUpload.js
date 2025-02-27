@@ -14,7 +14,6 @@ const ImageUpload = ({ imageUrl, setImageUrl }) => {
             folder: 'my-folder',
         }, function (error, result) {
             if (!error && result && result.event === "success") {
-                console.log(result);
                 setImageUrl(result.info.secure_url);
             }
         });

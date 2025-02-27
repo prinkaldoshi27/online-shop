@@ -12,6 +12,7 @@ import Register from "./Components/auth/Register";
 import Navbar from "./Components/navbars/Navbar";
 import Profile from "./Components/auth/Profile";
 import ProductInfoPage from "./Components/Products/ProductInfo";
+import Dashboard from "./Components/auth/Dashboard";
 
 function App() {
   const navigate = useNavigate();
@@ -34,7 +35,6 @@ function App() {
     setIsAuthenticated(true);
     setUserName(user.name);
     setUsers(user)
-    console.log("YAHA HAI? ", user)
     navigate("/products");
   };
 
@@ -49,6 +49,7 @@ function App() {
         {isAuthenticated ? (
           <Route path="/" element={<Layout userName={userName} />}>
             <Route path="/products" element={<Products />} />
+            <Route path="/dashboard" element={<Dashboard user={user} />} />
             <Route path="/product-info" element={<ProductInfoPage  />} />
             <Route path="/profile" element={<Profile user={user}/>} />
             <Route path="/cart" element={<Cart />} />
